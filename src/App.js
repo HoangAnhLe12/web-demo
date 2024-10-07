@@ -1,25 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import Scene from './components/scene/Scene';
+
+import { Layout } from 'antd';
+
+const { Content } = Layout;
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   return (
+      <Layout>
+         <button
+            style={{
+               display: 'block',
+               color: '#fff',
+               fontSize: 20,
+               padding: '20px 25px',
+               fontWeight: 600,
+               backgroundColor: '#0000004d',
+               position: 'absolute',
+               zIndex: 1,
+               right: '30px',
+               top: '30px',
+               border: '1px solid #fff3',
+               borderRadius: '50px',
+            }}
+         >
+            Dashboard
+         </button>
+         <Content style={{ height: '100vh' }}>
+            <Scene />
+         </Content>
+      </Layout>
+   );
 }
 
 export default App;
