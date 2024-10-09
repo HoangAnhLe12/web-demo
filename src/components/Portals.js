@@ -1,9 +1,15 @@
+import { DragControls } from '@react-three/drei';
+import { useRef } from 'react';
+
 function Portals({ position, onClick }) {
+   const portalRef = useRef();
    return (
-      <mesh position={position} onClick={onClick}>
-         <sphereGeometry args={[1.25, 32, 32]} />
-         <meshBasicMaterial color="white" />
-      </mesh>
+      <DragControls>
+         <mesh ref={portalRef} position={position}>
+            <sphereGeometry args={[1.25, 32, 32]} />
+            <meshBasicMaterial color="white" />
+         </mesh>
+      </DragControls>
    );
 }
 

@@ -1,8 +1,9 @@
-import { TextureLoader, BackSide } from 'three';
-import { useState } from 'react';
-import { useLoader } from '@react-three/fiber';
+import * as THREE from 'three';
+import { useState, useRef } from 'react';
+import { useLoader, useThree } from '@react-three/fiber';
+import images from '../../assets/images';
 
-import Portals from '../Portals';
+// import Portals from '../Portals';
 
 const data = [
    {
@@ -12,7 +13,7 @@ const data = [
             id: 1,
          },
       ],
-      url: '/img/2294472375_24a3b8ef46_o.jpg',
+      url: images.house,
       id: 0,
    },
    {
@@ -26,7 +27,7 @@ const data = [
             id: 2,
          },
       ],
-      url: '/img/Photosphere1.jpg',
+      url: images.outside,
       id: 1,
    },
    {
@@ -36,26 +37,73 @@ const data = [
             id: 0,
          },
       ],
-      url: '/img/bryan-goff-IuyhXAia8EA-unsplash.jpg',
+      url: images.snow,
       id: 2,
    },
 ];
 
+const radius = 500;
+
+// Tạo một điểm tại tọa độ tính toán sẵn (theta = π/4, phi = π/4)
+const pointPosition = [
+   498.2310375663341,
+
+   16.791770205834336,
+
+   -21.165189931694698,
+];
+
+function Point({ position, onClick }) {
+   return (
+      <mesh position={position} onClick={onClick}>
+         {/* Tạo một mesh hình cầu nhỏ tại vị trí xác định */}
+         <sphereGeometry args={[5, 16, 16]} />
+         <meshBasicMaterial color="red" />
+      </mesh>
+   );
+}
+
 function Dome() {
    const [which, set] = useState(0);
    const maps = useLoader(
-      TextureLoader,
+      THREE.TextureLoader,
       data.map((entry) => entry.url),
    );
+   //Test
+   const meshRef = useRef();
+   const { camera, scene } = useThree();
+
+   // Tạo raycaster để tìm vị trí trên vòm
+   const raycaster = new THREE.Raycaster();
+   const mouse = new THREE.Vector2();
+
+   const handleMouseClick = (event) => {
+      // Lấy vị trí chuột
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      // Cập nhật raycaster
+      raycaster.setFromCamera(mouse, camera);
+
+      // Kiểm tra các đối tượng mà raycaster đã chạm tới
+      const intersects = raycaster.intersectObjects(scene.children);
+
+      if (intersects.length > 0) {
+         const intersectedPoint = intersects[0].point;
+         console.log('Điểm đã chọn: ', intersectedPoint);
+      }
+   };
+
    return (
       <group>
-         <mesh>
-            <sphereGeometry attach="geometry" args={[500, 60, 40]} />
-            <meshBasicMaterial attach="material" map={maps[which]} side={BackSide} />
+         <mesh ref={meshRef} onDoubleClick={handleMouseClick}>
+            <sphereGeometry attach="geometry" args={[radius, 60, 40]} />
+            <meshBasicMaterial attach="material" map={maps[which]} side={THREE.BackSide} />
          </mesh>
-         {data[which].portals.map((portal, index) => (
+         {/* {data[which].portals.map((portal, index) => (
             <Portals key={index} position={portal.position} onClick={() => set(portal.id)} />
-         ))}
+         ))} */}
+         <Point position={pointPosition} onClick={() => alert('Chuyển sang cảnh khác')} />
       </group>
    );
 }
