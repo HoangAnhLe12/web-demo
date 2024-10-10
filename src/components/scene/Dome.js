@@ -1,80 +1,26 @@
 import * as THREE from 'three';
 import { useState, useRef } from 'react';
 import { useLoader, useThree } from '@react-three/fiber';
-import images from '../../assets/images';
 
-// import Portals from '../Portals';
-
-const data = [
-   {
-      portals: [
-         {
-            position: [10, 0, -15],
-            id: 1,
-         },
-      ],
-      url: images.house,
-      id: 0,
-   },
-   {
-      portals: [
-         {
-            position: [15, 0, 0],
-            id: 0,
-         },
-         {
-            position: [-15, 0, 0],
-            id: 2,
-         },
-      ],
-      url: images.outside,
-      id: 1,
-   },
-   {
-      portals: [
-         {
-            position: [10, 0, -15],
-            id: 0,
-         },
-      ],
-      url: images.snow,
-      id: 2,
-   },
-];
+import Point from '../Points';
+import { initialData } from '../Data';
 
 const radius = 500;
 
-// Tạo một điểm tại tọa độ tính toán sẵn (theta = π/4, phi = π/4)
-const pointPosition = [
-   498.2310375663341,
-
-   16.791770205834336,
-
-   -21.165189931694698,
-];
-
-function Point({ position, onClick }) {
-   return (
-      <mesh position={position} onClick={onClick}>
-         {/* Tạo một mesh hình cầu nhỏ tại vị trí xác định */}
-         <sphereGeometry args={[5, 16, 16]} />
-         <meshBasicMaterial color="red" />
-      </mesh>
-   );
-}
-
 function Dome() {
+   // Quản lý state của `data` và scene hiện tại
+   const [data, setData] = useState(initialData);
    const [which, set] = useState(0);
    const maps = useLoader(
       THREE.TextureLoader,
       data.map((entry) => entry.url),
    );
-   //Test
    const meshRef = useRef();
    const { camera, scene } = useThree();
 
    // Tạo raycaster để tìm vị trí trên vòm
    const raycaster = new THREE.Raycaster();
+
    const mouse = new THREE.Vector2();
 
    const handleMouseClick = (event) => {
@@ -90,6 +36,32 @@ function Dome() {
 
       if (intersects.length > 0) {
          const intersectedPoint = intersects[0].point;
+
+         // Thêm điểm mới vào dữ liệu trong state
+         const newData = data.map((entry, index) => {
+            if (index === which) {
+               // Thêm điểm mới vào đối tượng 'points' của scene hiện tại
+               return {
+                  ...entry,
+                  points: [
+                     ...entry.points,
+                     {
+                        type: 'gate',
+                        position: [intersectedPoint.x, intersectedPoint.y, intersectedPoint.z],
+                        data: {
+                           title: 'outside',
+                           id: 1,
+                        },
+                     },
+                  ],
+               };
+            }
+            return entry;
+         });
+
+         // Cập nhật state với data mới
+         setData(newData);
+
          console.log('Điểm đã chọn: ', intersectedPoint);
       }
    };
@@ -100,10 +72,15 @@ function Dome() {
             <sphereGeometry attach="geometry" args={[radius, 60, 40]} />
             <meshBasicMaterial attach="material" map={maps[which]} side={THREE.BackSide} />
          </mesh>
-         {/* {data[which].portals.map((portal, index) => (
-            <Portals key={index} position={portal.position} onClick={() => set(portal.id)} />
-         ))} */}
-         <Point position={pointPosition} onClick={() => alert('Chuyển sang cảnh khác')} />
+         {data[which].points.map((point, index) => (
+            <Point
+               key={index}
+               position={point.position}
+               type={point.type}
+               data={point.data}
+               onClick={() => set(point.data.id)}
+            />
+         ))}
       </group>
    );
 }
