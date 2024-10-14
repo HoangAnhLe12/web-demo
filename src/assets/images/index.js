@@ -3,6 +3,8 @@ const images = {
    outside: require('./Photosphere1.jpg'),
    snow: require('./bryan-goff-IuyhXAia8EA-unsplash.jpg'),
    natural: require('./view.jpg'),
+   bedroom: require('./pano5.jpg'),
+   sea: require('./panel1.jpeg'),
 };
 
 export default images;

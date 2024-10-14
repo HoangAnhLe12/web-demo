@@ -37,29 +37,34 @@ body,
    height: 100%;
    margin: 0;
    padding: 0;
-   background-color: #171720;
    -webkit-touch-callout: none;
    -webkit-user-select: none;
    -khtml-user-select: none;
    -moz-user-select: none;
    -ms-user-select: none;
    user-select: none;
-   overflow: hidden;
 }
-
-html,
-body {
-   width: 100%;
-   height: 100%;
+html ::-webkit-scrollbar {
+   border-radius: 0px;
+   width: 8px;
 }
-body {
-   position: fixed;
-   overflow: hidden;
+html *::-webkit-scrollbar {
+   border-radius: 0;
+   width: 8px;
 }
-
-body {
-   overscroll-behavior-y: none;
-   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
-      segoe ui, arial, sans-serif;
-   color: black;
+html ::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(22, 24, 35, 0.06);
+}
+html *::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(22, 24, 35, 0.06);
+}
+html ::-webkit-scrollbar-track {
+   border-radius: 0px;
+   background-color: rgba(0, 0, 0, 0);
+}
+html *::-webkit-scrollbar-track {
+   border-radius: 0;
+   background-color: rgba(0, 0, 0, 0);
 }

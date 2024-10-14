@@ -1,19 +1,40 @@
-import React from 'react';
-import { Layout } from 'antd';
-
+import { Fragment } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { publicRoutes } from './routes';
 import Scene from './components/scene/Scene';
-// import Home from './layouts/components/mainPage/Home';
 
-const { Content } = Layout;
+import DefaultLayout from './layouts/defaultLayout/defaultLayout';
 
 function App() {
    return (
-      <Layout>
-         <Content style={{ height: '100vh' }}>
-            {/* <Home /> */}
-            <Scene />
-         </Content>
-      </Layout>
+      <Router>
+         <div className="App">
+            <Routes>
+               {publicRoutes.map((route, index) => {
+                  let Layout = Fragment;
+                  if (route.layout) {
+                     Layout = DefaultLayout;
+                  }
+                  const Page = route.component;
+
+                  return (
+                     <Route
+                        key={index}
+                        path={route.path}
+                        element={
+                           <Layout>
+                              {/* <div style={{ height: '100vh' }}>
+                                 <Scene />
+                              </div> */}
+                              <Page />
+                           </Layout>
+                        }
+                     />
+                  );
+               })}
+            </Routes>
+         </div>
+      </Router>
    );
 }
 
