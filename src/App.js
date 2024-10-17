@@ -23,10 +23,10 @@ function App() {
                         path={route.path}
                         element={
                            <Layout>
-                              {/* <div style={{ height: '100vh' }}>
+                              <div style={{ height: '100vh' }}>
                                  <Scene />
-                              </div> */}
-                              <Page />
+                              </div>
+                              {/* <Page /> */}
                            </Layout>
                         }
                      />

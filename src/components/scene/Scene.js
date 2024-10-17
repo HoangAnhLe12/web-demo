@@ -3,8 +3,9 @@ import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 
 import Dome from './Dome';
-import Controls, { handleWheel } from './Controls';
+import { handleWheel } from './Controls';
 import { initialData } from '../Data';
+import { OrbitControls } from '@react-three/drei';
 // import useFetch from '../../hooks/useFetch';
 
 function Scene() {
@@ -35,7 +36,7 @@ function Scene() {
             far={1100}
             position={[0, 0, 5]}
          />
-         <Controls
+         <OrbitControls
             enableZoom={false}
             enablePan={false}
             enableDamping
